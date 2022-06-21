@@ -1,8 +1,9 @@
-<body>
-    <h1>Home</h1>
+{% extends 'main.html' %}
+{% block content %}
+
     {% if user.is_authenticated %}
         <h5>{{ user }}</h5>
-        <h6>{{ user_list }}</h6>
+        <h6>{{ user.is_staff }}</h6>
         <div>
             <a href="{% url 'logout' %}">Logout</a>
         </div>
@@ -14,4 +15,6 @@
             <a href="{% url 'register' %}">Register</a>
         </div>
     {% endif %}
-</body>
+
+{% endblock content %}
+

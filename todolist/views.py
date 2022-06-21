@@ -5,6 +5,10 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 from django.views.generic import ListView, FormView
 
+from django.contrib import messages
+
+from todolist.forms import RegisterForm
+
 
 class HomeView(ListView):
     model = User
@@ -19,11 +23,12 @@ class LoginPage(LoginView):
 
 class RegisterPage(FormView):
     template_name = 'todolist/register.html'
-    form_class = UserCreationForm
+    form_class = RegisterForm
     success_url = '/'
 
     def form_valid(self, form):
         user = form.save()
+        messages.success(self.request, 'Welcome to the application!')
         if user is not None:
             login(self.request, user)
         return super(RegisterPage, self).form_valid(form)
@@ -32,4 +37,3 @@ class RegisterPage(FormView):
         if self.request.user.is_authenticated:
             return redirect('home')
         return super(RegisterPage, self).get(*args, **kwargs)
-
