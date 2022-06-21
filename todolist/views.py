@@ -12,12 +12,12 @@ from django.views.generic import ListView, FormView
 from django.contrib import messages
 
 from todolist.forms import RegisterForm
-from todolist.models import Account
+from todolist.models import Account, AccountManager
 from todolist.token import account_activation_token
 
 
 class HomeView(ListView):
-    model = User
+    model = Account
     template_name = 'todolist/home.html'
 
 
@@ -27,13 +27,15 @@ class LoginPage(LoginView):
     next_page = 'home'
 
 
-class RegisterPage(FormView):
+class RegisterPage(FormView, AccountManager):
     template_name = 'todolist/register.html'
     form_class = RegisterForm
     success_url = '/'
 
     def form_valid(self, form):
         user = form.save()
+        user.set_password(form.cleaned_data['password2'])
+        user.save()
         messages.success(self.request, 'Welcome to the application!')
         if user is not None:
             if not user.is_active:
