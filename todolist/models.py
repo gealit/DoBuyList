@@ -1,4 +1,5 @@
-from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import BaseUserManager, AbstractUser
+
 from django.db import models
 
 
@@ -29,13 +30,13 @@ class AccountManager(BaseUserManager):
         return self.create_user(email, username, password, **other_fields)
 
 
-class Account(AbstractBaseUser, PermissionsMixin):
+class Account(AbstractUser):
     email = models.EmailField(verbose_name='email', max_length=60, unique=True)
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name='date_joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last_login', auto_now=True)
     about = models.TextField(verbose_name='about', max_length=200, blank=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
