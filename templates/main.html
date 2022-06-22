@@ -27,7 +27,15 @@
 
 </head>
 <body>
-
+    {% if user.is_authenticated %}
+    <div class="container">
+        <h4>Hello, {{ user.username }}!</h4>
+    </div>
+    {% else %}
+    <div class="container">
+        <h4>Welcome to the app!</h4>
+    </div>
+    {% endif %}
     <div class="container">
 
         {% if messages %}

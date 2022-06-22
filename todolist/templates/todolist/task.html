@@ -1,0 +1,20 @@
+{% extends 'main.html' %}
+{% block content %}
+    {% csrf_token %}
+    {% if request.user == task.user %}
+        <a href="{% url 'tasks' %}">Back</a>
+        <div>
+            {{ task.title }}
+        </div>
+        <div>
+            {{ task.info }}
+        </div>
+        <div>
+            {{ task.created }}
+        </div>
+        <div>
+            {{ task.done }}
+        </div>
+    {% endif %}
+
+{% endblock content %}

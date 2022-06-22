@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.forms import Textarea
 
-from todolist.models import Account
+from todolist.models import Account, Task
 
 
 class UserAdminConfig(UserAdmin):
@@ -29,3 +29,4 @@ class UserAdminConfig(UserAdmin):
 
 
 admin.site.register(Account, UserAdminConfig)
+admin.site.register(Task)

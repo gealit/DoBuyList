@@ -1,5 +1,4 @@
 from django.contrib.auth import login
-from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
@@ -7,12 +6,12 @@ from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView, FormView, DetailView
 
 from django.contrib import messages
 
 from todolist.forms import RegisterForm
-from todolist.models import Account, AccountManager
+from todolist.models import Account, AccountManager, Task
 from todolist.token import account_activation_token
 
 
@@ -71,3 +70,19 @@ def activate(request, uidb64, token):
         return redirect('login')
     else:
         return render(request, 'todolist/activation_invalid.html')
+
+
+class TasksView(ListView):
+    model = Task
+    template_name = 'todolist/tasks.html'
+    context_object_name = 'tasks'
+
+    def get_queryset(self):
+        queryset = Task.objects.filter(user=self.request.user)
+        return queryset
+
+
+class TaskDetailView(DetailView):
+    model = Task
+    context_object_name = 'task'
+    template_name = 'todolist/task.html'

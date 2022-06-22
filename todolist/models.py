@@ -46,3 +46,17 @@ class Account(AbstractUser):
 
     def __str__(self):
         return f'Username: {self.username}; Email: {self.email}'
+
+
+class Task(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    info = models.TextField(max_length=200, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    done = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ('done', '-created',)
+
+    def __str__(self):
+        return f'Task: {self.title}'
