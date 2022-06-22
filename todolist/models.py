@@ -51,7 +51,7 @@ class Account(AbstractUser):
 class Task(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    info = models.TextField(max_length=200, blank=True)
+    info = models.TextField(max_length=200, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     done = models.BooleanField(default=False)
 

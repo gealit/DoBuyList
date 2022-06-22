@@ -4,9 +4,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import ListView, FormView, DetailView
+from django.views.generic import ListView, FormView, DetailView, CreateView, UpdateView, DeleteView
 
 from django.contrib import messages
 
@@ -72,7 +73,7 @@ def activate(request, uidb64, token):
         return render(request, 'todolist/activation_invalid.html')
 
 
-class TasksView(ListView):
+class TasksListView(ListView):
     model = Task
     template_name = 'todolist/tasks.html'
     context_object_name = 'tasks'
@@ -86,3 +87,25 @@ class TaskDetailView(DetailView):
     model = Task
     context_object_name = 'task'
     template_name = 'todolist/task.html'
+
+
+class TaskCreateView(CreateView):
+    model = Task
+    fields = '__all__'
+    template_name = 'todolist/task-create.html'
+    form_class = None
+    success_url = reverse_lazy('tasks')
+
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    fields = '__all__'
+    form_class = None
+    template_name = 'todolist/task-update.html'
+    success_url = reverse_lazy('tasks')
+
+
+class TaskDeleteView(DeleteView):
+    model = Task
+    template_name = 'todolist/task-delete.html'
+    success_url = reverse_lazy('tasks')
