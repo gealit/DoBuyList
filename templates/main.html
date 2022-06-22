@@ -27,9 +27,9 @@
 
 </head>
 <body>
-    {% if user.is_authenticated %}
+    {% if request.user.is_authenticated %}
     <div class="container">
-        <h4>Hello, {{ user.username }}!</h4>
+        <h4>Hello, {{ user.username|title }}.</h4>
     </div>
     {% else %}
     <div class="container">

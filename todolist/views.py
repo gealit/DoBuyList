@@ -1,4 +1,5 @@
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
@@ -16,7 +17,7 @@ from todolist.models import Account, AccountManager, Task
 from todolist.token import account_activation_token
 
 
-class HomeView(ListView):
+class HomeView(LoginRequiredMixin, ListView):
     model = Account
     template_name = 'todolist/home.html'
 
@@ -73,39 +74,45 @@ def activate(request, uidb64, token):
         return render(request, 'todolist/activation_invalid.html')
 
 
-class TasksListView(ListView):
+class TasksListView(LoginRequiredMixin, ListView):
     model = Task
     template_name = 'todolist/tasks.html'
     context_object_name = 'tasks'
 
-    def get_queryset(self):
-        queryset = Task.objects.filter(user=self.request.user)
-        return queryset
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tasks'] = context['tasks'].filter(user=self.request.user)
+        context['count'] = context['tasks'].filter(done=False).count()
+        return context
 
 
-class TaskDetailView(DetailView):
+class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     context_object_name = 'task'
     template_name = 'todolist/task.html'
 
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
-    fields = '__all__'
+    fields = ['title', 'info', 'done']
     template_name = 'todolist/task-create.html'
     form_class = None
     success_url = reverse_lazy('tasks')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(TaskCreateView, self).form_valid(form)
 
-class TaskUpdateView(UpdateView):
+
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
-    fields = '__all__'
+    fields = ['title', 'info', 'done']
     form_class = None
     template_name = 'todolist/task-update.html'
     success_url = reverse_lazy('tasks')
 
 
-class TaskDeleteView(DeleteView):
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     template_name = 'todolist/task-delete.html'
     success_url = reverse_lazy('tasks')
