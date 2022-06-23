@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+{% block content %}
+    {% csrf_token %}
+    {% if request.user.is_authenticated %}
+        <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
+
+        {% for room in rooms %}
+            <tr class='success'>
+                <div class="container">
+                    {{ room.name }}
+                </div>
+            </tr>
+        {% empty %}
+            <h3>No items in List</h3>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.forms import Textarea
 
-from todolist.models import Account, Task
+from todolist.models import Account, Task, Room, RoomTask
 
 
 class UserAdminConfig(UserAdmin):
@@ -30,3 +30,5 @@ class UserAdminConfig(UserAdmin):
 
 admin.site.register(Account, UserAdminConfig)
 admin.site.register(Task)
+admin.site.register(Room)
+admin.site.register(RoomTask)

@@ -2,7 +2,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path
 
 from todolist.views import HomeView, LoginPage, RegisterPage, activate, TaskDetailView, TasksListView, TaskCreateView, \
-    TaskUpdateView, TaskDeleteView
+    TaskUpdateView, TaskDeleteView, RoomsListView, RoomsSearchListView, RoomTasksListView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -15,4 +15,7 @@ urlpatterns = [
     path('task-create/', TaskCreateView.as_view(), name='task-create'),
     path('task-update/<int:pk>/', TaskUpdateView.as_view(), name='task-update'),
     path('task-delete/<int:pk>/', TaskDeleteView.as_view(), name='task-delete'),
+    path('rooms/', RoomsListView.as_view(), name='rooms'),
+    path('rooms-search/', RoomsSearchListView.as_view(), name='rooms-search'),
+    path('rooms/<int:pk>/', RoomTasksListView.as_view(), name='room'),
 ]

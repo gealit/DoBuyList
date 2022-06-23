@@ -13,7 +13,7 @@ from django.views.generic import ListView, FormView, DetailView, CreateView, Upd
 from django.contrib import messages
 
 from todolist.forms import RegisterForm
-from todolist.models import Account, AccountManager, Task
+from todolist.models import Account, AccountManager, Task, Room, RoomTask
 from todolist.token import account_activation_token
 
 
@@ -28,7 +28,7 @@ class LoginPage(LoginView):
     next_page = 'home'
 
 
-class RegisterPage(FormView, AccountManager):
+class RegisterPage(FormView):
     template_name = 'todolist/register.html'
     form_class = RegisterForm
     success_url = '/'
@@ -116,3 +116,33 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     template_name = 'todolist/task-delete.html'
     success_url = reverse_lazy('tasks')
+
+
+class RoomsListView(LoginRequiredMixin, ListView):
+    model = Room
+    template_name = 'todolist/rooms.html'
+    context_object_name = 'rooms'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rooms'] = context['rooms'].filter(participants=self.request.user)
+        context['count'] = context['rooms'].count()
+        return context
+
+
+class RoomsSearchListView(LoginRequiredMixin, ListView):
+    model = Room
+    context_object_name = 'rooms'
+    template_name = 'todolist/rooms-search.html'
+
+
+class RoomTasksListView(LoginRequiredMixin, ListView):
+    model = RoomTask
+    context_object_name = 'roomtasks'
+    template_name = 'todolist/room.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['roomtasks'] = context['roomtasks'].filter(room__participants=self.request.user)
+        return context
+
