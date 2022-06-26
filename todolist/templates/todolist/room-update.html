@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <a href="{% url 'tasks' %}">Back</a>
+    <a href="{% url 'room-detail' room.id %}">Back</a>
     <form method="POST" action="">
         {% csrf_token %}
         {{ form.as_p }}

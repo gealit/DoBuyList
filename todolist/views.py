@@ -2,7 +2,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -13,7 +13,7 @@ from django.views.generic import ListView, FormView, DetailView, CreateView, Upd
 from django.contrib import messages
 
 from todolist.forms import RegisterForm
-from todolist.models import Account, AccountManager, Task, Room, RoomTask
+from todolist.models import Account, Task, Room, RoomTask
 from todolist.token import account_activation_token
 
 
@@ -131,10 +131,18 @@ class RoomsListView(LoginRequiredMixin, ListView):
 
 class RoomCreateView(LoginRequiredMixin, CreateView):
     model = Room
-    fields = '__all__'
+    fields = ['name', 'info', 'password']
     form_class = None
     template_name = 'todolist/room-create.html'
-    success_url = reverse_lazy('rooms')
+    success_url = '/rooms'
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        info = form.cleaned_data['info']
+        password = form.cleaned_data['password']
+        instance = Room.objects.create(name=name, info=info, password=password)
+        instance.participants.add(self.request.user)
+        return HttpResponseRedirect(self.success_url)
 
 
 class RoomUpdateView(LoginRequiredMixin, UpdateView):
