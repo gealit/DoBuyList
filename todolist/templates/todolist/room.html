@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 {% block content %}
         <div class="container">
-            {{ request.resolver_match.kwargs.pk }}
+            {{ request.resolver_match.kwargs.id }}
         </div>
         <div class="container">
 
@@ -9,12 +9,15 @@
     {% csrf_token %}
         <tr>
             <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
-            <div class="container"><a href="{% url 'room-task-create' pk=request.resolver_match.kwargs.pk %}">Create new task</a></div>
+            <div class="container"><a href="{% url 'room-task-create' id=request.resolver_match.kwargs.id %}">Create new task</a></div>
         </tr>
         <div class="container">
         {% for task in room_tasks %}
             <div class="container">
-            {{ task }}; {{ task.room.id }}
+            {{ task }}; {{ task.room.id }}; task id - {{ task.id }}
+            </div>
+            <div class="container">
+            <a href="{% url 'room-task-update' id=task.room.id pk=task.id %}">Update</a>
             </div>
         {% endfor %}
         </div>

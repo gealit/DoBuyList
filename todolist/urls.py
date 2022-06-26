@@ -3,7 +3,7 @@ from django.urls import path
 
 from todolist.views import HomeView, LoginPage, RegisterPage, activate, TaskDetailView, TasksListView, TaskCreateView, \
     TaskUpdateView, TaskDeleteView, RoomsListView, RoomsSearchListView, RoomTasksListView, RoomTaskCreateView, \
-    RoomDetailView  # RoomTaskUpdateView
+    RoomDetailView, RoomTaskUpdateView, RoomCreateView, RoomDeleteView, RoomUpdateView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -17,9 +17,12 @@ urlpatterns = [
     path('task-update/<int:pk>/', TaskUpdateView.as_view(), name='task-update'),
     path('task-delete/<int:pk>/', TaskDeleteView.as_view(), name='task-delete'),
     path('rooms/', RoomsListView.as_view(), name='rooms'),
+    path('room-create/', RoomCreateView.as_view(), name='room-create'),
+    path('room-update/<int:id>/', RoomUpdateView.as_view(), name='room-update'),
+    path('room-delete/<int:id>/', RoomDeleteView.as_view(), name='room-delete'),
     path('rooms-search/', RoomsSearchListView.as_view(), name='rooms-search'),
-    path('rooms/<int:pk>/', RoomTasksListView.as_view(), name='room'),
-    path('rooms/<int:pk>/room-detail/', RoomDetailView.as_view(), name='room-detail'),
-    path('rooms/<int:pk>/room-task-create/', RoomTaskCreateView.as_view(), name='room-task-create'),
-    # path('rooms/<int:pk>/room-task-update/<int:pk>/', RoomTaskUpdateView.as_view(), name='room-task-update'),
+    path('rooms/<int:id>/', RoomTasksListView.as_view(), name='room'),
+    path('rooms/<int:id>/room-detail/', RoomDetailView.as_view(), name='room-detail'),
+    path('rooms/<int:id>/room-task-create/', RoomTaskCreateView.as_view(), name='room-task-create'),
+    path('rooms/<int:id>/room-task-update/<int:pk>/', RoomTaskUpdateView.as_view(), name='room-task-update'),
 ]

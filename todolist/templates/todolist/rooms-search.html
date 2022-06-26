@@ -6,9 +6,15 @@
 
         {% for room in rooms %}
             <tr class='success'>
+            {% if request.user in room.participants.all %}
+                <div class="container">
+                    <a href="{% url 'room' room.id %}">{{ room.name }}</a>
+                </div>
+            {% else %}
                 <div class="container">
                     {{ room.name }}
                 </div>
+            {% endif %}
             </tr>
         {% empty %}
             <h3>No items in List</h3>

@@ -129,9 +129,34 @@ class RoomsListView(LoginRequiredMixin, ListView):
         return Room.objects.filter(participants=self.request.user)
 
 
+class RoomCreateView(LoginRequiredMixin, CreateView):
+    model = Room
+    fields = '__all__'
+    form_class = None
+    template_name = 'todolist/room-create.html'
+    success_url = reverse_lazy('rooms')
+
+
+class RoomUpdateView(LoginRequiredMixin, UpdateView):
+    model = Room
+    fields = '__all__'
+    form_class = None
+    template_name = 'todolist/room-update.html'
+    success_url = reverse_lazy('rooms')
+    pk_url_kwarg = 'id'
+
+
+class RoomDeleteView(LoginRequiredMixin, DeleteView):
+    model = Room
+    template_name = 'todolist/room-delete.html'
+    pk_url_kwarg = 'id'
+    success_url = reverse_lazy('rooms')
+
+
 class RoomDetailView(LoginRequiredMixin, DetailView):
     model = Room
     template_name = 'todolist/room-detail.html'
+    pk_url_kwarg = 'id'
 
 
 class RoomsSearchListView(LoginRequiredMixin, ListView):
@@ -151,7 +176,7 @@ class RoomTasksListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         print(self.request.resolver_match.kwargs)
-        return RoomTask.objects.filter(room=self.request.resolver_match.kwargs['pk'])
+        return RoomTask.objects.filter(room=self.request.resolver_match.kwargs['id'])
 
 
 class RoomTaskCreateView(LoginRequiredMixin, CreateView):
@@ -161,21 +186,30 @@ class RoomTaskCreateView(LoginRequiredMixin, CreateView):
     form_class = None
 
     def form_valid(self, form):
-        room_id = self.request.resolver_match.kwargs['pk']
+        room_id = self.request.resolver_match.kwargs['id']
         print(Room.objects.get(id=room_id))
         form.instance.room = Room.objects.get(id=room_id)
         form.instance.user = self.request.user
         return super(RoomTaskCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        room_id = self.request.resolver_match.kwargs['pk']
+        room_id = self.request.resolver_match.kwargs['id']
         self.success_url = f'/rooms/{room_id}/'
         return self.success_url
 
 
-# class RoomTaskUpdateView(LoginRequiredMixin, UpdateView):
-#     model = Task
-#     fields = ['title', 'info', 'done']
-#     form_class = None
-#     template_name = 'todolist/room-task-update.html'
-#     success_url = reverse_lazy('tasks')
+class RoomTaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = RoomTask
+    fields = ['title', 'info', 'done']
+    form_class = None
+    template_name = 'todolist/room-task-update.html'
+
+    def get_success_url(self):
+        print(self.request.resolver_match.kwargs)
+        room_id = self.request.resolver_match.kwargs['id']
+        self.success_url = f'/rooms/{room_id}/'
+        return self.success_url
+
+    def get_queryset(self):
+        print(self.request.resolver_match.kwargs)
+        return RoomTask.objects.filter(pk=self.request.resolver_match.kwargs['pk'])

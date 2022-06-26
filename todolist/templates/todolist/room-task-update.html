@@ -1,0 +1,11 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <a href="{% url 'room' id=request.resolver_match.kwargs.id %}">Back</a>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+{#    <a href="{% url 'task-delete' task.id %}">Delete</a>#}
+{% endblock content %}

@@ -2,16 +2,20 @@
 {% block content %}
     {% csrf_token %}
         <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
+        <div class="container"><a href="{% url 'room-update' room.id %}">Update Room</a></div>
         <div class="container">
         {{ room.name }}
         </div>
         <div class="container">
-        {{ room.participants.all }}
+        {% for account in room.participants.all %}
+        {{ account.username }}
+        {% endfor %}
         </div>
         <div class="container">
-        {{ room.info }}
+        info: {{ room.info }}
         </div>
         <div class="container">
         {{ room.password }}
         </div>
+        <div class="container"><a href="{% url 'room-delete' room.id %}">Delete Room</a></div>
 {% endblock content %}
