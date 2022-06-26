@@ -1,12 +1,11 @@
 from django import forms
 
-from todolist.models import Account
+from todolist.models import Account, Room
 
 
 class RegisterForm(forms.ModelForm):
-
     username = forms.CharField(
-        label='Username', min_length=4, max_length=30, help_text='Required'
+        label='Username', min_length=3, max_length=30, help_text='Required'
     )
     email = forms.EmailField(
         max_length=60, help_text='Required', error_messages={
@@ -56,3 +55,20 @@ class RegisterForm(forms.ModelForm):
             {'class': 'form-control', 'placeholder': 'Repeat Password'}
         )
 
+
+class RoomUpdateForm(forms.ModelForm):
+    username = forms.CharField()
+
+    class Meta:
+        model = Room
+        fields = ('name', 'info', 'password')
+
+    # def clean_username(self):
+    #     username = self.cleaned_data['username'].lower()
+    #     print(username)
+    #     user = Account.objects.filter(username=username).get()
+    #     print(user)
+    #     print(user)
+    #     if not user:
+    #         raise forms.ValidationError("Username doesn't exists.")
+    #     return user

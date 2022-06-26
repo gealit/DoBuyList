@@ -8,7 +8,7 @@ from todolist.models import Account, Task, Room, RoomTask
 class UserAdminConfig(UserAdmin):
     search_fields = ('email', 'username',)
     ordering = ('-date_joined',)
-    list_display = ('username', 'email', 'is_staff', 'is_active')
+    list_display = ('username', 'id', 'email', 'is_staff', 'is_active')
 
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),

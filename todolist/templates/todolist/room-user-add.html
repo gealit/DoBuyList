@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <a href="{% url 'room' room.id %}">Back</a>
+    <h4>chose users you want to add to the {{ room }}</h4>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% for user in users %}
+        {{ user.username }}<a href="{% url 'user-add' id=room.id pk=user.pk %}">add</a>
+        {% endfor %}
+    </form>
+{% endblock content %}

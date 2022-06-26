@@ -2,6 +2,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.sites.shortcuts import get_current_site
+from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -12,7 +13,7 @@ from django.views.generic import ListView, FormView, DetailView, CreateView, Upd
 
 from django.contrib import messages
 
-from todolist.forms import RegisterForm
+from todolist.forms import RegisterForm, RoomUpdateForm
 from todolist.models import Account, Task, Room, RoomTask
 from todolist.token import account_activation_token
 
@@ -147,11 +148,15 @@ class RoomCreateView(LoginRequiredMixin, CreateView):
 
 class RoomUpdateView(LoginRequiredMixin, UpdateView):
     model = Room
-    fields = '__all__'
+    fields = ['name', 'info', 'password']
     form_class = None
     template_name = 'todolist/room-update.html'
     success_url = reverse_lazy('rooms')
     pk_url_kwarg = 'id'
+
+    def form_valid(self, form):
+        print(self.request)
+        return super(RoomUpdateView, self).form_valid(form)
 
 
 class RoomDeleteView(LoginRequiredMixin, DeleteView):
@@ -165,6 +170,27 @@ class RoomDetailView(LoginRequiredMixin, DetailView):
     model = Room
     template_name = 'todolist/room-detail.html'
     pk_url_kwarg = 'id'
+
+
+def participants_delete(request, id, pk):
+    room = Room.objects.get(id=id)
+    user = Account.objects.get(pk=pk)
+    room.participants.remove(user)
+    return redirect(f'/rooms/{id}/room-detail')
+
+
+def participants_add(request, id):
+    room = Room.objects.get(id=id)
+    users = Account.objects.all()
+    context = {'room': room, 'users': users}
+    return render(request, 'todolist/room-user-add.html', context)
+
+
+def user_add(request, id, pk):
+    room = Room.objects.get(id=id)
+    user = Account.objects.get(pk=pk)
+    room.participants.add(user)
+    return redirect(f'/rooms/{id}/room-detail')
 
 
 class RoomsSearchListView(LoginRequiredMixin, ListView):

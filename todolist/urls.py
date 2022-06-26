@@ -3,7 +3,8 @@ from django.urls import path
 
 from todolist.views import HomeView, LoginPage, RegisterPage, activate, TaskDetailView, TasksListView, TaskCreateView, \
     TaskUpdateView, TaskDeleteView, RoomsListView, RoomsSearchListView, RoomTasksListView, RoomTaskCreateView, \
-    RoomDetailView, RoomTaskUpdateView, RoomCreateView, RoomDeleteView, RoomUpdateView
+    RoomDetailView, RoomTaskUpdateView, RoomCreateView, RoomDeleteView, RoomUpdateView, participants_delete, \
+    participants_add, user_add
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -19,6 +20,9 @@ urlpatterns = [
     path('rooms/', RoomsListView.as_view(), name='rooms'),
     path('room-create/', RoomCreateView.as_view(), name='room-create'),
     path('room-update/<int:id>/', RoomUpdateView.as_view(), name='room-update'),
+    path('room-user-delete/<int:id>/<int:pk>/', participants_delete, name='room-user-delete'),
+    path('room-user-add/<int:id>/', participants_add, name='room-user-add'),
+    path('user-add/<int:id>/<int:pk>/', user_add, name='user-add'),
     path('room-delete/<int:id>/', RoomDeleteView.as_view(), name='room-delete'),
     path('rooms-search/', RoomsSearchListView.as_view(), name='rooms-search'),
     path('rooms/<int:id>/', RoomTasksListView.as_view(), name='room'),

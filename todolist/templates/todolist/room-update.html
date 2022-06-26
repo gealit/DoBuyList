@@ -2,9 +2,21 @@
 
 {% block content %}
     <a href="{% url 'room-detail' room.id %}">Back</a>
-    <form method="POST" action="">
+    <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% if form.errors %}
+            <div class="alert alert-primary" role="alert">
+                Error! {{ form.errors }}
+            </div>
+        {% endif %}
+        <div class="container">Participants:
+        {% for account in room.participants.all %}
+        <div class="container">{{ account.username }}<a href="{% url 'room-user-delete' id=room.id pk=account.pk %}">del</a></div>
+        {% endfor %}
+        <a href="{% url 'room-user-add' id=room.id %}">add participants</a>
+        </div>
+
+        <div class="container">{{ form.as_p }}</div>
         <input type="submit" value="Submit">
     </form>
     <a href="{% url 'room-delete' room.id %}">Delete</a>
