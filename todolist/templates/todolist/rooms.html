@@ -9,11 +9,10 @@
         {% for room in rooms %}
             <tr class='success'>
                 <div class="container">
-{#                    <a href="{% url 'task' task.id %}"><td>{{ task.title }}</td></a>#}
-                </div>
-                <div class="container">
                     <a href="{% url 'room' room.id %}"><td>{{ room.name }}</td></a>
+                    <a href="{% url 'room-detail' room.id %}">Detail</a>
                 </div>
+
 {#            <a href="{% url 'task-update' task.id %}">Edit</a>#}
             </tr>
         {% empty %}

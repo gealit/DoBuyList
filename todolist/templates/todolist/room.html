@@ -1,38 +1,21 @@
 {% extends 'main.html' %}
 {% block content %}
+        <div class="container">
+            {{ request.resolver_match.kwargs.pk }}
+        </div>
+        <div class="container">
+
+        </div>
     {% csrf_token %}
-    {{ roomtasks.room }}
-{#    {{ roomtasks }}#}
-    {% if request.user.is_authenticated %}
         <tr>
             <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
-            <div class="container"><a href="{% url 'task-create' %}">Create new task</a></div>
+            <div class="container"><a href="{% url 'room-task-create' pk=request.resolver_match.kwargs.pk %}">Create new task</a></div>
         </tr>
-        {% for task in roomtasks %}
-            <tr class='success'>
-                <div class="container">
-                    <a href="{% url 'task' task.id %}"><td>{{ task.title }}</td></a>
-                    <td>{{ task.created|timesince }} ago</td>
-                </div>
-                <div class="container">
-                <td>{{ task.done }}</td>
-                </div>
-                <div class="container">
-                <td>{{ task.room }}</td>
-                </div>
-
-                <div class="container">
-                <td>{{ task.room.participants }}</td>
-                </div>
-
-                <div class="container">
-                <td>{{ task.user }}</td>
-                </div>
-            <a href="{% url 'task-update' task.id %}">Edit</a>
-            </tr>
-        {% empty %}
-            <h3>No items in List</h3>
+        <div class="container">
+        {% for task in room_tasks %}
+            <div class="container">
+            {{ task }}; {{ task.room.id }}
+            </div>
         {% endfor %}
-    {% endif %}
-
+        </div>
 {% endblock content %}

@@ -81,9 +81,11 @@ class TasksListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tasks'] = context['tasks'].filter(user=self.request.user)
         context['count'] = context['tasks'].filter(done=False).count()
         return context
+
+    def get_queryset(self):
+        return Task.objects.filter(user=self.request.user)
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
@@ -123,11 +125,13 @@ class RoomsListView(LoginRequiredMixin, ListView):
     template_name = 'todolist/rooms.html'
     context_object_name = 'rooms'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['rooms'] = context['rooms'].filter(participants=self.request.user)
-        context['count'] = context['rooms'].count()
-        return context
+    def get_queryset(self):
+        return Room.objects.filter(participants=self.request.user)
+
+
+class RoomDetailView(LoginRequiredMixin, DetailView):
+    model = Room
+    template_name = 'todolist/room-detail.html'
 
 
 class RoomsSearchListView(LoginRequiredMixin, ListView):
@@ -137,12 +141,41 @@ class RoomsSearchListView(LoginRequiredMixin, ListView):
 
 
 class RoomTasksListView(LoginRequiredMixin, ListView):
-    model = RoomTask
-    context_object_name = 'roomtasks'
+    model = Room
+    context_object_name = 'room_tasks'
     template_name = 'todolist/room.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['roomtasks'] = context['roomtasks'].filter(room__participants=self.request.user)
         return context
 
+    def get_queryset(self):
+        print(self.request.resolver_match.kwargs)
+        return RoomTask.objects.filter(room=self.request.resolver_match.kwargs['pk'])
+
+
+class RoomTaskCreateView(LoginRequiredMixin, CreateView):
+    model = RoomTask
+    template_name = 'todolist/room-task-create.html'
+    fields = ['title', 'info', 'done']
+    form_class = None
+
+    def form_valid(self, form):
+        room_id = self.request.resolver_match.kwargs['pk']
+        print(Room.objects.get(id=room_id))
+        form.instance.room = Room.objects.get(id=room_id)
+        form.instance.user = self.request.user
+        return super(RoomTaskCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        room_id = self.request.resolver_match.kwargs['pk']
+        self.success_url = f'/rooms/{room_id}/'
+        return self.success_url
+
+
+# class RoomTaskUpdateView(LoginRequiredMixin, UpdateView):
+#     model = Task
+#     fields = ['title', 'info', 'done']
+#     form_class = None
+#     template_name = 'todolist/room-task-update.html'
+#     success_url = reverse_lazy('tasks')

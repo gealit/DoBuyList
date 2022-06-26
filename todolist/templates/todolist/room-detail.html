@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+{% block content %}
+    {% csrf_token %}
+        <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
+        <div class="container">
+        {{ room.name }}
+        </div>
+        <div class="container">
+        {{ room.participants.all }}
+        </div>
+        <div class="container">
+        {{ room.info }}
+        </div>
+        <div class="container">
+        {{ room.password }}
+        </div>
+{% endblock content %}
