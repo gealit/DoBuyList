@@ -13,7 +13,7 @@ from django.views.generic import ListView, FormView, DetailView, CreateView, Upd
 
 from django.contrib import messages
 
-from todolist.forms import RegisterForm, RoomUpdateForm
+from todolist.forms import RegisterForm, RoomUpdateForm, RoomEnterForm
 from todolist.models import Account, Task, Room, RoomTask
 from todolist.token import account_activation_token
 
@@ -199,6 +199,28 @@ class RoomsSearchListView(LoginRequiredMixin, ListView):
     template_name = 'todolist/rooms-search.html'
 
 
+class RoomEnter(FormView):
+    model = Room
+    template_name = 'todolist/room-enter.html'
+    form_class = RoomEnterForm
+    success_url = reverse_lazy('rooms-search')
+
+    def form_valid(self, form):
+        id = self.request.resolver_match.kwargs['id']
+        room = Room.objects.get(pk=id)
+        if room.password != form.clean_password():
+            messages.error(self.request, 'wrong password')
+            return redirect(f'/rooms-enter/{id}')
+        else:
+            room.participants.add(self.request.user)
+        return super(RoomEnter, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['room'] = Room.objects.get(pk=self.request.resolver_match.kwargs['id'])
+        return context
+
+
 class RoomTasksListView(LoginRequiredMixin, ListView):
     model = Room
     context_object_name = 'room_tasks'
@@ -239,7 +261,6 @@ class RoomTaskUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'todolist/room-task-update.html'
 
     def get_success_url(self):
-        print(self.request.resolver_match.kwargs)
         room_id = self.request.resolver_match.kwargs['id']
         self.success_url = f'/rooms/{room_id}/'
         return self.success_url

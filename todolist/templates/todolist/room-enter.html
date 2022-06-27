@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+{% block content %}
+    {% csrf_token %}
+    {{ room }}
+    <div class="container"><a href="{% url 'rooms-search' %}">Back</a></div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% if request.user not in room.participants.all %}
+        <div class="container">
+        {{ form.as_p }}
+        <input type="submit" value="Enter">
+        </div>
+        {% else %}
+            <div class="container"> You are in participants </div>
+        {% endif %}
+    </form>
+{% endblock content %}

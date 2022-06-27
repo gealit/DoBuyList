@@ -63,12 +63,14 @@ class RoomUpdateForm(forms.ModelForm):
         model = Room
         fields = ('name', 'info', 'password')
 
-    # def clean_username(self):
-    #     username = self.cleaned_data['username'].lower()
-    #     print(username)
-    #     user = Account.objects.filter(username=username).get()
-    #     print(user)
-    #     print(user)
-    #     if not user:
-    #         raise forms.ValidationError("Username doesn't exists.")
-    #     return user
+
+class RoomEnterForm(forms.ModelForm):
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
+    class Meta:
+        model = Room
+        fields = ('password',)
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        return password

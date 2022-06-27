@@ -5,8 +5,16 @@
     <h4>chose users you want to add to the {{ room }}</h4>
     <form method="POST" action="">
         {% csrf_token %}
-        {% for user in users %}
-        {{ user.username }}<a href="{% url 'user-add' id=room.id pk=user.pk %}">add</a>
+        {% for user in room.participants.all %}
+        {{ user.username }}
         {% endfor %}
+        {% for user in users %}
+        {% if user not in room.participants.all %}
+        <div class="container">
+        {{ user.username }}<a href="{% url 'user-add' id=room.id pk=user.pk %}">add</a>
+        </div>
+        {% endif %}
+        {% endfor %}
+
     </form>
 {% endblock content %}

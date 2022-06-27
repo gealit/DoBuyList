@@ -3,7 +3,6 @@
     {% csrf_token %}
     {% if request.user.is_authenticated %}
         <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
-
         {% for room in rooms %}
             <tr class='success'>
             {% if request.user in room.participants.all %}
@@ -12,7 +11,7 @@
                 </div>
             {% else %}
                 <div class="container">
-                    {{ room.name }}
+                    {{ room.name }}<a href="{% url 'room-enter' id=room.id %}">enter the room</a>
                 </div>
             {% endif %}
             </tr>
