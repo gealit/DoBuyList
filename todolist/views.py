@@ -70,7 +70,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('login')
+        return redirect('login', permanent=True)
     else:
         return render(request, 'todolist/activation_invalid.html')
 
@@ -228,11 +228,12 @@ class RoomTasksListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['room'] = Room.objects.get(id=self.room_id)
         return context
 
     def get_queryset(self):
-        print(self.request.resolver_match.kwargs)
-        return RoomTask.objects.filter(room=self.request.resolver_match.kwargs['id'])
+        self.room_id = self.request.resolver_match.kwargs['id']
+        return RoomTask.objects.filter(room=self.room_id)
 
 
 class RoomTaskCreateView(LoginRequiredMixin, CreateView):

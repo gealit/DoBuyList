@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 {% block content %}
         <div class="container">
-            {{ request.resolver_match.kwargs.id }}
+            {{ room }}
         </div>
         <div class="container">
 
@@ -9,6 +9,7 @@
     {% csrf_token %}
         <tr>
             <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
+            <div class="container"><a href="{% url 'chat' room_id=room.id %}">Room Chat</a></div>
             <div class="container"><a href="{% url 'room-task-create' id=request.resolver_match.kwargs.id %}">Create new task</a></div>
         </tr>
         <div class="container">
