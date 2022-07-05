@@ -59,8 +59,9 @@ class RoomDetailView(LoginRequiredMixin, DetailView):
 
 def participants_delete(request, id, pk):
     room = Room.objects.get(id=id)
-    user = Account.objects.get(pk=pk)
-    room.participants.remove(user)
+    if request.user in room.participants:
+        user = Account.objects.get(pk=pk)
+        room.participants.remove(user)
     return redirect(f'/rooms/{id}/room-detail')
 
 
@@ -73,8 +74,9 @@ def participants_add(request, id):
 
 def user_add(request, id, pk):
     room = Room.objects.get(id=id)
-    user = Account.objects.get(pk=pk)
-    room.participants.add(user)
+    if request.user in room.participants:
+        user = Account.objects.get(pk=pk)
+        room.participants.add(user)
     return redirect(f'/rooms/{id}/room-detail')
 
 
@@ -152,4 +154,15 @@ class RoomTaskUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_queryset(self):
         return RoomTask.objects.filter(pk=self.request.resolver_match.kwargs['pk'])
+
+
+class RoomTaskDeleteView(LoginRequiredMixin, DeleteView):
+    model = RoomTask
+    template_name = 'room/room-task-delete.html'
+
+    def get_success_url(self):
+        room_id = self.request.resolver_match.kwargs['id']
+        self.success_url = f'/rooms/{room_id}'
+        return self.success_url
+
 

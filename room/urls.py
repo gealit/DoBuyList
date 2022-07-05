@@ -2,7 +2,7 @@ from django.urls import path
 
 from room.views import RoomCreateView, RoomsListView, RoomUpdateView, participants_delete, participants_add, user_add, \
     RoomDeleteView, RoomsSearchListView, RoomEnter, RoomTasksListView, RoomDetailView, RoomTaskCreateView, \
-    RoomTaskUpdateView
+    RoomTaskUpdateView, RoomTaskDeleteView
 
 urlpatterns = [
     path('rooms/', RoomsListView.as_view(), name='rooms'),
@@ -18,4 +18,5 @@ urlpatterns = [
     path('rooms/<int:id>/room-detail/', RoomDetailView.as_view(), name='room-detail'),
     path('rooms/<int:id>/room-task-create/', RoomTaskCreateView.as_view(), name='room-task-create'),
     path('rooms/<int:id>/room-task-update/<int:pk>/', RoomTaskUpdateView.as_view(), name='room-task-update'),
+    path('rooms/<int:id>/room-task-delete/<int:pk>/', RoomTaskDeleteView.as_view(), name='room-task-delete'),
 ]

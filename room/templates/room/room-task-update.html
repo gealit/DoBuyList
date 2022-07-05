@@ -2,10 +2,11 @@
 
 {% block content %}
     <a href="{% url 'room' id=request.resolver_match.kwargs.id %}">Back</a>
+    <div class="container">{{ roomtask.room }} | {{ roomtask }}</div>
+    <a href="{% url 'room-task-delete' id=roomtask.room_id pk=roomtask.id %}">Delete</a>
     <form method="POST" action="">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit">
     </form>
-{#    <a href="{% url 'task-delete' task.id %}">Delete</a>#}
 {% endblock content %}
