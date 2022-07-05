@@ -17,17 +17,17 @@ from account.token import account_activation_token
 
 class HomeView(LoginRequiredMixin, ListView):
     model = Account
-    template_name = 'todolist/home.html'
+    template_name = 'account/home.html'
 
 
 class LoginPage(LoginView):
-    template_name = 'todolist/login.html'
+    template_name = 'account/login.html'
     redirect_authenticated_user = True
     next_page = 'home'
 
 
 class RegisterPage(FormView):
-    template_name = 'todolist/register.html'
+    template_name = 'account/register.html'
     form_class = RegisterForm
     success_url = '/'
 
@@ -40,7 +40,7 @@ class RegisterPage(FormView):
             if not user.is_active:
                 current_site = get_current_site(self.request)
                 subject = 'Account activating'
-                message = render_to_string('todolist/account_activation_email.html', {
+                message = render_to_string('account/account_activation_email.html', {
                     'user': user,
                     'domain': current_site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -69,4 +69,4 @@ def activate(request, uidb64, token):
         login(request, user)
         return redirect('login', permanent=True)
     else:
-        return render(request, 'todolist/activation_invalid.html')
+        return render(request, 'account/activation_invalid.html')

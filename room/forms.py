@@ -1,6 +1,6 @@
 from django import forms
 
-from todolist.models import Room
+from room.models import Room
 
 
 class RoomUpdateForm(forms.ModelForm):

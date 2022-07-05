@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from chat.models import Message
-from todolist.models import Room
+from room.models import Room
 
 
 def chat_room(request, room_id):

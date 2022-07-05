@@ -1,6 +1,7 @@
 from django.db import models
 
-from todolist.models import Room, Account
+from account.models import Account
+from room.models import Room
 
 
 class Message(models.Model):
