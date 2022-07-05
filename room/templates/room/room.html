@@ -15,7 +15,7 @@
         <div class="container">
         {% for task in room_tasks %}
             <div class="container">
-            <a href="{% url 'room-task-update' id=task.room.id pk=task.id %}">{{ task }}</a>; Created {{ task.created|timesince }} ego. Done: {{ task.done }}
+            <a href="{% url 'room-task-update' id=room.id pk=task.id %}">{{ task }}</a>; Created {{ task.created|timesince }} ego. Done: {{ task.done }}
             </div>
         {% endfor %}
         </div>

@@ -5,13 +5,9 @@
         <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
         {% for room in rooms %}
             <tr class='success'>
-            {% if request.user in room.participants.all %}
+            {% if request.user not in room.participants.all %}
                 <div class="container">
-                    <a href="{% url 'room' room.id %}">{{ room.name }}</a>
-                </div>
-            {% else %}
-                <div class="container">
-                    {{ room.name }}<a href="{% url 'room-enter' id=room.id %}">enter the room</a>
+                    <a href="{% url 'room-enter' room.id %}">{{ room.name }}</a>
                 </div>
             {% endif %}
             </tr>

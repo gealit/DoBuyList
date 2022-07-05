@@ -59,7 +59,7 @@ class RoomDetailView(LoginRequiredMixin, DetailView):
 
 def participants_delete(request, id, pk):
     room = Room.objects.get(id=id)
-    if request.user in room.participants:
+    if request.user in room.participants.all():
         user = Account.objects.get(pk=pk)
         room.participants.remove(user)
     return redirect(f'/rooms/{id}/room-detail')
@@ -67,14 +67,15 @@ def participants_delete(request, id, pk):
 
 def participants_add(request, id):
     room = Room.objects.get(id=id)
+    participants = room.participants.all()
     users = Account.objects.all()
-    context = {'room': room, 'users': users}
+    context = {'room': room, 'users': users, 'participants': participants}
     return render(request, 'room/room-user-add.html', context)
 
 
 def user_add(request, id, pk):
     room = Room.objects.get(id=id)
-    if request.user in room.participants:
+    if request.user in room.participants.all():
         user = Account.objects.get(pk=pk)
         room.participants.add(user)
     return redirect(f'/rooms/{id}/room-detail')
@@ -84,6 +85,9 @@ class RoomsSearchListView(LoginRequiredMixin, ListView):
     model = Room
     context_object_name = 'rooms'
     template_name = 'room/rooms-search.html'
+
+    def get_queryset(self):
+        return Room.objects.all().prefetch_related('participants')
 
 
 class RoomEnter(FormView):
@@ -109,7 +113,7 @@ class RoomEnter(FormView):
 
 
 class RoomTasksListView(LoginRequiredMixin, ListView):
-    model = Room
+    model = RoomTask
     context_object_name = 'room_tasks'
     template_name = 'room/room.html'
 
