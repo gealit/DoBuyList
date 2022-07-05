@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'account.apps.AccountConfig',
     'todolist.apps.TodolistConfig',
     'chat.apps.ChatConfig',
 ]
@@ -66,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = 'todolist.Account'
+AUTH_USER_MODEL = 'account.Account'
 
 WSGI_APPLICATION = 'dbl.wsgi.application'
 

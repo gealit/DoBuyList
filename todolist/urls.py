@@ -1,17 +1,11 @@
-from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from todolist.views import HomeView, LoginPage, RegisterPage, activate, TaskDetailView, TasksListView, TaskCreateView, \
+from todolist.views import TaskDetailView, TasksListView, TaskCreateView, \
     TaskUpdateView, TaskDeleteView, RoomsListView, RoomsSearchListView, RoomTasksListView, RoomTaskCreateView, \
     RoomDetailView, RoomTaskUpdateView, RoomCreateView, RoomDeleteView, RoomUpdateView, participants_delete, \
     participants_add, user_add, RoomEnter
 
 urlpatterns = [
-    path('', HomeView.as_view(), name='home'),
-    path('login/', LoginPage.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
-    path('register/', RegisterPage.as_view(), name='register'),
-    path('activate/<slug:uidb64>/<slug:token>/', activate, name='activate'),
     path('tasks/', TasksListView.as_view(), name='tasks'),
     path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task'),
     path('task-create/', TaskCreateView.as_view(), name='task-create'),
