@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% block content %}
+    {% if request.user in room.participants.all %}
     {% csrf_token %}
         <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
         <div class="container"><a href="{% url 'room-update' room.id %}">Update Room</a></div>
@@ -19,4 +20,7 @@
         Password: {{ room.password }}
         </div>
         <div class="container"><a href="{% url 'room-delete' room.id %}">Delete Room</a></div>
+        {% else %}
+            <h3>Want to join to the room?<a href="{% url 'room-enter' room.id %}">Join</a></h3>
+        {% endif %}
 {% endblock content %}

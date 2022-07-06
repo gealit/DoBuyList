@@ -1,10 +1,15 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <a href="{% url 'room' room.id %}">Back</a>
-    <h4>Are you sure you want to Delete this Room?</h4>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <input type="submit" value="Delete">
-    </form>
+    <h4>{{ room }}</h4>
+    {% if request.user in room.participants.all %}
+        <a href="{% url 'room' room.id %}">Back</a>
+        <h4>Are you sure you want to Delete this Room?</h4>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <input type="submit" value="Delete">
+        </form>
+    {% else %}
+        <h4>You are not allowed here!</h4>
+    {% endif %}
 {% endblock content %}

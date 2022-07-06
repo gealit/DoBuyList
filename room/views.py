@@ -14,6 +14,7 @@ class RoomsListView(LoginRequiredMixin, ListView):
     model = Room
     template_name = 'room/rooms.html'
     context_object_name = 'rooms'
+    raise_exception = True
 
     def get_queryset(self):
         return Room.objects.filter(participants=self.request.user)
@@ -25,6 +26,7 @@ class RoomCreateView(LoginRequiredMixin, CreateView):
     form_class = None
     template_name = 'room/room-create.html'
     success_url = '/rooms'
+    raise_exception = True
 
     def form_valid(self, form):
         name = form.cleaned_data['name']
@@ -42,6 +44,7 @@ class RoomUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'room/room-update.html'
     success_url = reverse_lazy('rooms')
     pk_url_kwarg = 'id'
+    raise_exception = True
 
 
 class RoomDeleteView(LoginRequiredMixin, DeleteView):
@@ -49,12 +52,14 @@ class RoomDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'room/room-delete.html'
     pk_url_kwarg = 'id'
     success_url = reverse_lazy('rooms')
+    raise_exception = True
 
 
 class RoomDetailView(LoginRequiredMixin, DetailView):
     model = Room
     template_name = 'room/room-detail.html'
     pk_url_kwarg = 'id'
+    raise_exception = True
 
 
 def participants_delete(request, id, pk):
@@ -85,23 +90,24 @@ class RoomsSearchListView(LoginRequiredMixin, ListView):
     model = Room
     context_object_name = 'rooms'
     template_name = 'room/rooms-search.html'
+    raise_exception = True
 
     def get_queryset(self):
         return Room.objects.all().prefetch_related('participants')
 
 
-class RoomEnter(FormView):
+class RoomEnter(LoginRequiredMixin, FormView):
     model = Room
     template_name = 'room/room-enter.html'
     form_class = RoomEnterForm
-    success_url = reverse_lazy('rooms-search')
+    raise_exception = True
 
     def form_valid(self, form):
-        id = self.request.resolver_match.kwargs['id']
-        room = Room.objects.get(pk=id)
+        self.room_id = self.request.resolver_match.kwargs['id']
+        room = Room.objects.get(pk=self.room_id)
         if room.password != form.clean_password():
             messages.error(self.request, 'wrong password')
-            return redirect(f'/rooms-enter/{id}')
+            return redirect(f'/rooms-enter/{self.room_id}')
         else:
             room.participants.add(self.request.user)
         return super(RoomEnter, self).form_valid(form)
@@ -111,11 +117,15 @@ class RoomEnter(FormView):
         context['room'] = Room.objects.get(pk=self.request.resolver_match.kwargs['id'])
         return context
 
+    def get_success_url(self):
+        return f'/rooms/{self.room_id}'
+
 
 class RoomTasksListView(LoginRequiredMixin, ListView):
     model = RoomTask
     context_object_name = 'room_tasks'
     template_name = 'room/room.html'
+    raise_exception = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -124,7 +134,9 @@ class RoomTasksListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         self.room_id = self.request.resolver_match.kwargs['id']
+        # if self.request.user in Room.objects.get(id=self.room_id).participants.all():
         return RoomTask.objects.filter(room=self.room_id)
+        # return HttpResponseRedirect('rooms')
 
 
 class RoomTaskCreateView(LoginRequiredMixin, CreateView):
@@ -132,6 +144,7 @@ class RoomTaskCreateView(LoginRequiredMixin, CreateView):
     template_name = 'room/room-task-create.html'
     fields = ['title', 'info', 'done']
     form_class = None
+    raise_exception = True
 
     def form_valid(self, form):
         room_id = self.request.resolver_match.kwargs['id']
@@ -150,6 +163,7 @@ class RoomTaskUpdateView(LoginRequiredMixin, UpdateView):
     fields = ['title', 'info', 'done']
     form_class = None
     template_name = 'room/room-task-update.html'
+    raise_exception = True
 
     def get_success_url(self):
         room_id = self.request.resolver_match.kwargs['id']
@@ -163,6 +177,7 @@ class RoomTaskUpdateView(LoginRequiredMixin, UpdateView):
 class RoomTaskDeleteView(LoginRequiredMixin, DeleteView):
     model = RoomTask
     template_name = 'room/room-task-delete.html'
+    raise_exception = True
 
     def get_success_url(self):
         room_id = self.request.resolver_match.kwargs['id']

@@ -7,6 +7,7 @@
 
         </div>
     {% csrf_token %}
+    {% if request.user in room.participants.all %}
         <tr>
             <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
             <div class="container"><a href="{% url 'chat' room_id=room.id %}">Room Chat</a></div>
@@ -17,6 +18,11 @@
             <div class="container">
             <a href="{% url 'room-task-update' id=room.id pk=task.id %}">{{ task }}</a>; Created {{ task.created|timesince }} ego. Done: {{ task.done }}
             </div>
+        {% empty %}
+            <h3>No items in List</h3>
         {% endfor %}
+        {% else %}
+            <h3>Want to join to the room?<a href="{% url 'room-enter' room.id %}">Join</a></h3>
+        {% endif %}
         </div>
 {% endblock content %}

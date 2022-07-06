@@ -1,22 +1,11 @@
 {% extends 'main.html' %}
 {% block content %}
     {% csrf_token %}
-    {% if request.user == task.user %}
         <a href="{% url 'tasks' %}">Back</a>
-        <div>
-            {{ task.title }}
-        </div>
-        <div>
-            {{ task.info }}
-        </div>
-        <div>
-            {{ task.created }}
-        </div>
-        <div>
-            {{ task.done }}
-        </div>
+        <div>{{ task.title }}</div>
+        <div>{{ task.info }}</div>
+        <div>{{ task.created }}</div>
+        <div>{{ task.done }}</div>
         <a href="{% url 'task-update' task.id %}">Edit</a>
         <a href="{% url 'task-delete' task.id %}">Delete</a>
-    {% endif %}
-
 {% endblock content %}
