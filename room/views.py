@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, FormView
@@ -46,6 +46,17 @@ class RoomUpdateView(LoginRequiredMixin, UpdateView):
     pk_url_kwarg = 'id'
     raise_exception = True
 
+    def get_queryset(self):
+        room_id = self.request.resolver_match.kwargs['id']
+        return Room.objects.filter(id=room_id).prefetch_related('participants')
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super(RoomUpdateView, self).get_object()
+        if not self.request.user in obj.participants.all():
+            raise Http404
+        return obj
+
 
 class RoomDeleteView(LoginRequiredMixin, DeleteView):
     model = Room
@@ -72,6 +83,8 @@ def participants_delete(request, id, pk):
 
 def participants_add(request, id):
     room = Room.objects.get(id=id)
+    if not request.user in room.participants.all():
+        return redirect(f'/rooms-enter/{id}/')
     participants = room.participants.all()
     users = Account.objects.all()
     context = {'room': room, 'users': users, 'participants': participants}
@@ -103,11 +116,11 @@ class RoomEnter(LoginRequiredMixin, FormView):
     raise_exception = True
 
     def form_valid(self, form):
-        self.room_id = self.request.resolver_match.kwargs['id']
-        room = Room.objects.get(pk=self.room_id)
+        room_id = self.request.resolver_match.kwargs['id']
+        room = Room.objects.get(pk=room_id)
         if room.password != form.clean_password():
             messages.error(self.request, 'wrong password')
-            return redirect(f'/rooms-enter/{self.room_id}')
+            return redirect(f'/rooms-enter/{room_id}')
         else:
             room.participants.add(self.request.user)
         return super(RoomEnter, self).form_valid(form)
@@ -134,9 +147,7 @@ class RoomTasksListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         self.room_id = self.request.resolver_match.kwargs['id']
-        # if self.request.user in Room.objects.get(id=self.room_id).participants.all():
         return RoomTask.objects.filter(room=self.room_id)
-        # return HttpResponseRedirect('rooms')
 
 
 class RoomTaskCreateView(LoginRequiredMixin, CreateView):
@@ -156,6 +167,12 @@ class RoomTaskCreateView(LoginRequiredMixin, CreateView):
         room_id = self.request.resolver_match.kwargs['id']
         self.success_url = f'/rooms/{room_id}/'
         return self.success_url
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        room_id = self.request.resolver_match.kwargs['id']
+        context['room'] = Room.objects.get(id=room_id)
+        return context
 
 
 class RoomTaskUpdateView(LoginRequiredMixin, UpdateView):

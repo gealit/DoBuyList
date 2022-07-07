@@ -15,7 +15,6 @@
         {% endfor %}
         <a href="{% url 'room-user-add' id=room.id %}">add participants</a>
         </div>
-
         <div class="container">{{ form.as_p }}</div>
         <input type="submit" value="Submit">
     </form>

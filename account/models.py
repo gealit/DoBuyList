@@ -22,6 +22,7 @@ class AccountManager(BaseUserManager):
 
     def create_superuser(self, email, username, password, **other_fields):
 
+        other_fields.setdefault('is_active', True)
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
 

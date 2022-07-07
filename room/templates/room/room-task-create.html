@@ -1,10 +1,13 @@
 {% extends 'main.html' %}
 {% block content %}
-    <div class="container"><a href="{% url 'room' request.resolver_match.kwargs.id %}">Back</a></div>
+    {% if request.user in room.participants.all %}
+    <div class="container"><a href="{% url 'room' room.id %}">Back</a></div>
     <form method="POST" action="">
     {% csrf_token %}
-
     {{ form.as_p }}
     <input type="submit" value="Submit">
     </form>
+    {% else %}
+        <a href="{% url 'room-enter' room.id %}">{{ room.name }}</a>
+    {% endif %}
 {% endblock content %}
