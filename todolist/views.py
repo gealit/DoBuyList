@@ -10,11 +10,17 @@ class TasksListView(LoginRequiredMixin, ListView):
     model = Task
     template_name = 'todolist/tasks.html'
     context_object_name = 'tasks'
-    raise_exception = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tasks_count'] = context['tasks'].filter(done=False).count()
+        context['count'] = context['tasks'].filter(done=False).count()
+
+        search_input = self.request.GET.get('search-area') or ''
+        if search_input:
+            context['tasks'] = context['tasks'].filter(
+                title__icontains=search_input)
+
+        context['search_input'] = search_input
         return context
 
     def get_queryset(self):
@@ -26,7 +32,6 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     context_object_name = 'task'
     template_name = 'todolist/task.html'
-    raise_exception = True
 
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
@@ -47,7 +52,6 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     template_name = 'todolist/task-create.html'
     form_class = None
     success_url = reverse_lazy('tasks')
-    raise_exception = True
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -60,7 +64,6 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     form_class = None
     template_name = 'todolist/task-update.html'
     success_url = reverse_lazy('tasks')
-    raise_exception = True
 
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
@@ -79,7 +82,6 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     template_name = 'todolist/task-delete.html'
     success_url = reverse_lazy('tasks')
-    raise_exception = True
 
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """

@@ -1,12 +1,12 @@
 {% extends 'main.html' %}
 {% block content %}
-
     <form method="POST">
     {% csrf_token %}
+    {% for message in messages %}
+    {{ message }}123
+    {% endfor %}
         {% if form.errors %}
-        <div class="alert alert-primary" role="alert">
-            Error! {{ form.errors }}
-        </div>
+            <div class="header-bar" role="alert">{{ form.errors }}</div>
         {% endif %}
         <table>
             <tr>
@@ -23,5 +23,4 @@
     </form>
         <small>Haven't you signed up yet?</small>
         <a href="{% url 'register' %}">Register</a>
-
 {% endblock content %}
