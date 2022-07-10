@@ -1,11 +1,29 @@
 {% extends 'main.html' %}
 {% block content %}
+    <div class="header-bar">
+        <div>
+            <h2>{{ task.title|capfirst }}</h2>
+        </div>
+        <a href="{% url 'tasks' %}">&#8678; Back</a>
+    </div>
     {% csrf_token %}
-        <a href="{% url 'tasks' %}">Back</a>
-        <div>{{ task.title }}</div>
-        <div>{{ task.info }}</div>
-        <div>{{ task.created }}</div>
-        <div>{{ task.done }}</div>
-        <a href="{% url 'task-update' task.id %}">Edit</a>
-        <a href="{% url 'task-delete' task.id %}">Delete</a>
+    <div class="task-items-wrapper">
+        <div class="task-wrapper">
+            <h2>Info: {{ task.info }}</h2>
+        </div>
+        <div class="task-wrapper">
+            <h4>Created {{ task.created|timesince }} ego. <h6>{{ task.created }}</h6></h4>
+        </div>
+        <div class="task-wrapper">
+            {% if task.done %}
+                <h3>The task is completed</h3>
+            {% else %}
+                <h3>The task is incomplete</h3>
+            {% endif %}
+        </div>
+    <div class="task-wrapper">
+        <a class="delete-link" href="{% url 'task-update' task.id %}">Edit &#9998;</a>
+        <a class="delete-link" href="{% url 'task-delete' task.id %}">Delete &#10006;</a>
+    </div>
+    </div>
 {% endblock content %}

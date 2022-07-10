@@ -1,35 +1,37 @@
 {% extends 'main.html' %}
 {% block content %}
+    <div class="header-bar">
+        <p align="center"><h2>Register</h2></p>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ form.errors }}
+                    </div>
+                {% endif %}
+                {{ form.username.label_tag }}
+                {{ form.username }}
 
-    <form method="POST">
-        {% csrf_token %}
-        {% if form.errors %}
-        <div class="alert alert-primary" role="alert">
-            Error! {{ form.errors }}
+                {{ form.email.label_tag }}
+                {{ form.email }}
+
+                {{ form.password.label_tag }}
+                {{ form.password }}
+
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+        <div style="margin-top: 20px;" align="center">
+            <input class="button" type="submit" value="Register">
         </div>
-        {% endif %}
-        <table>
-            <tr>
-                <td>{{ form.username.label_tag }}</td>
-                <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.email.label_tag }}</td>
-                <td>{{ form.email }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.password.label_tag }}</td>
-                <td>{{ form.password }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.password2.label_tag }}</td>
-                <td>{{ form.password2 }}</td>
-            </tr>
-        </table>
-        <input type="submit" value="Register">
-        <input type="hidden">
-    </form>
+            <input type="hidden">
+        </form>
+    </div>
+    <div align="center">
         <small>Already have an account?</small>
         <a href="{% url 'login' %}">Login</a>
+    </div>
+
 
 {% endblock content %}

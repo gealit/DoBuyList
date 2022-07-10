@@ -17,7 +17,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('username', 'email',)
+        fields = ('username', 'email')
 
     def clean_username(self):
         username = self.cleaned_data['username'].lower()
@@ -32,7 +32,7 @@ class RegisterForm(forms.ModelForm):
             raise forms.ValidationError('Please use another Email, that is already taken.')
         return email
 
-    def clean_password(self):
+    def clean_password2(self):
         password = self.cleaned_data.get("password")
         password2 = self.cleaned_data.get("password2")
         if password and password2 and password != password2:

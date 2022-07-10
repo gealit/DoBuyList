@@ -1,9 +1,16 @@
 {% extends 'main.html' %}
 {% block content %}
-    <a href="{% url 'task' task.id %}">Back</a>
+    <div class="header-bar">
+    <div>
+        <h2>{{ task.title|capfirst }}</h2>
+    </div>
+    <a href="{% url 'task' task.id %}">&#8678; Back</a>
+    </div>
+    <div class="task-items-wrapper">
     <h4>Are you sure you want to Delete this Task?</h4>
+    </div>
     <form method="POST" action="">
         {% csrf_token %}
-        <input type="submit" value="Delete">
+        <input class="button" type="submit" value="Delete">
     </form>
 {% endblock content %}

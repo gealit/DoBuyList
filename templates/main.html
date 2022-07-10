@@ -11,6 +11,7 @@
             background-color: #FAFAFA;
             font-family: 'Rubik', sans-serif;
             padding-top: 10px;
+            box-sizing: border-box;
         }
 
         h1,
@@ -31,6 +32,8 @@
         a {
             font-weight: 600;
         }
+
+
 
         .container{
             max-width: 550px;
@@ -66,6 +69,11 @@
             background-color: #fff;
             border-top: 1px solid #dfe4ea;
             overflow: hidden;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        .task-wrapper:hover {
+            background-color: azure;
         }
 
         .task-title {
@@ -130,7 +138,11 @@
         }
 
         .selectedTask {
-            opacity: 0.6;
+            opacity: 0;
+        }
+
+        .search__input {
+            margin-right: 30px;
         }
 
 
@@ -155,6 +167,7 @@
         }
 
         input[type=text],
+        input[type=email],
         input[type=password],
         textarea {
             border: 1px solid #757575;
@@ -185,7 +198,8 @@
         }
 
         .card-body {
-            padding: 20px;
+            {#padding: 20px;#}
+            margin: 10%;
         }
     </style>
 </head>

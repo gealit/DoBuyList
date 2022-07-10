@@ -10,8 +10,8 @@
     </div>
     <div id="search-add-wrapper">
         <form method="GET" style="margin-top: 0px;display: flex;">
-            <input type='text' name='search-area' placeholder="Search your task" value="{{search_input}}">
-            <div style="padding-right: 10px"></div>
+            <input class="search__input" type='text' name='search-area' placeholder="Search your task" value="{{search_input}}">
+{#            <div style="padding-right: 10px"></div>#}
             <input class="button" type="submit" value='Search'>
         </form>
     <a id="add-link" href="{% url 'task-create' %}">&#x2b;</a>

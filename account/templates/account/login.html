@@ -1,26 +1,28 @@
 {% extends 'main.html' %}
 {% block content %}
+    <div class="header-bar">
+        <p align="center"><h2>Login</h2></p>
+    </div>
+    <div class="card-body">
     <form method="POST">
     {% csrf_token %}
-    {% for message in messages %}
-    {{ message }}123
-    {% endfor %}
         {% if form.errors %}
-            <div class="header-bar" role="alert">{{ form.errors }}</div>
+            <div class="header-bar">{{ form.errors }}</div>
         {% endif %}
-        <table>
-            <tr>
-                <td>{{ form.username.label_tag }}</td>
-                <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.password.label_tag }}</td>
-                <td>{{ form.password }}</td>
-            </tr>
-        </table>
-    <input type="submit" value="login">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+
+            {{ form.password.label_tag }}
+            {{ form.password }}
+        <div style="margin-top: 20px;" align="center">
+            <input class="button" type="submit" value="Login">
+        </div>
     <input type="hidden">
     </form>
+    </div>
+    <div align="center">
         <small>Haven't you signed up yet?</small>
         <a href="{% url 'register' %}">Register</a>
+    </div>
+
 {% endblock content %}

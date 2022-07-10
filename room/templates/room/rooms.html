@@ -4,7 +4,7 @@
     {% if request.user.is_authenticated %}
         <div class="container"><a href="{% url 'home' %}">Back</a></div>
         <div class="container"><a href="{% url 'rooms-search' %}">Search the room</a></div>
-        <a href="{% url 'room-create' %}">Create new room</a>
+        <div class="container"><a href="{% url 'room-create' %}">Create new room</a></div>
 
         {% for room in rooms %}
             <tr class='success'>

@@ -9,16 +9,19 @@
             <a href="{% url 'logout' %}">Logout</a>
     </div>
         <div class="task-items-wrapper">
-            <div class="task-title">
-                <a href="{% url 'tasks' %}">Tasks</a>
+            <div class="task-wrapper">
+                <div class="task-title">
+                    <a href="{% url 'tasks' %}">Tasks</a>
+                </div>
             </div>
-            <div class="task-title">
-                <a href="{% url 'rooms' %}">Rooms</a>
+            <div class="task-wrapper">
+                <div class="task-title">
+                    <a href="{% url 'rooms' %}">Rooms</a>
+                </div>
             </div>
         </div>
-        <div class="task-items-wrapper">
-            <h6 style="align-content: center">hope you like it!</h6>
-        </div>
+        <div align="center"><h5>Hope you like it!</h5></div>
+
     {% endif %}
 
 {% endblock content %}
