@@ -4,13 +4,19 @@
     <div>
         <h2>{{ task.title|capfirst }}</h2>
     </div>
-    <a href="{% url 'task' task.id %}">&#8678; Back</a>
+    <h3><a href="{% url 'task' task.id %}">&#8678; Back</a></h3>
     </div>
-    <div class="task-items-wrapper">
-    <h4>Are you sure you want to Delete this Task?</h4>
+    <div class="task-wrapper">
+        <h3></h3>
+        <h4>Are you sure you want to Delete this Task?</h4>
+        <h3></h3>
     </div>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <input class="button" type="submit" value="Delete">
-    </form>
+    <div class="task-wrapper">
+        <h3></h3>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <input class="button" type="submit" value="Delete">
+        </form>
+        <h3></h3>
+    </div>
 {% endblock content %}
