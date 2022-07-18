@@ -67,6 +67,10 @@ class RoomDetailView(LoginRequiredMixin, DetailView):
     template_name = 'room/room-detail.html'
     pk_url_kwarg = 'id'
 
+    def get_queryset(self):
+        room_id = self.request.resolver_match.kwargs['id']
+        return Room.objects.filter(id=room_id).prefetch_related('participants')
+
 
 def participants_delete(request, id, pk):
     room = Room.objects.get(id=id)
@@ -81,8 +85,22 @@ def participants_add(request, id):
     if not request.user in room.participants.all():
         return redirect(f'/rooms-enter/{id}/')
     participants = room.participants.all()
-    users = Account.objects.all()
-    context = {'room': room, 'users': users, 'participants': participants}
+
+    search_input = request.GET.get('search-area') or ''
+    if search_input:
+        users = Account.objects.filter(
+            username__icontains=search_input)
+    else:
+        users = False
+    search_input = search_input
+
+    # users = Account.objects.all()
+    context = {
+        'room': room,
+        'users': users,
+        'participants': participants,
+        'search_input': search_input,
+    }
     return render(request, 'room/room-user-add.html', context)
 
 

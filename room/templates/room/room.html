@@ -1,28 +1,37 @@
 {% extends 'main.html' %}
 {% block content %}
-        <div class="container">
-            {{ room }}
-        </div>
-        <div class="container">
-
-        </div>
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>{{ room.name }}</h3>
+        <h3><a href="{% url 'rooms' %}">&#8678; Back</a></h3>
+    </div>
     {% csrf_token %}
     {% if request.user in room.participants.all %}
-        <tr>
-            <div class="container"><a href="{% url 'rooms' %}">Back</a></div>
-            <div class="container"><a href="{% url 'chat' room_id=room.id %}">Room Chat</a></div>
-            <div class="container"><a href="{% url 'room-task-create' id=request.resolver_match.kwargs.id %}">Create new task</a></div>
-        </tr>
-        <div class="container">
-        {% for task in room_tasks %}
-            <div class="container">
-            <a href="{% url 'room-task-update' id=room.id pk=task.id %}">{{ task }}</a>; Created {{ task.created|timesince }} ego. Done: {{ task.done }}
-            </div>
-        {% empty %}
-            <h3>No items in List</h3>
-        {% endfor %}
-        {% else %}
-            <h3>Want to join to the room?<a href="{% url 'room-enter' room.id %}">Join</a></h3>
-        {% endif %}
+        <div class="task-wrapper">
+            <h3><a class="delete-link" href="{% url 'chat' room_id=room.id %}">Room Chat &#9993;</a></h3>
+            <h3><a class="delete-link" href="{% url 'room-task-create' id=request.resolver_match.kwargs.id %}">&#10010; Create new task</a></h3>
+        </div>
+        <div class="task-items-wrapper">
+            {% for task in room_tasks %}
+                <div class="task-wrapper">
+                    {% if task.done %}
+                        <div class="task-title">
+                        <div class="task-complete-icon"></div>
+                        <i><s><a href="{% url 'room-task-update' id=room.id pk=task.id %}">{{ task.title }}</a></s></i>
+                        </div>
+                    {% else %}
+                        <div class="task-title">
+                        <div class="task-incomplete-icon"></div>
+                            <a href="{% url 'room-task-update' id=room.id pk=task.id %}">{{ task.title }}</a>
+                        </div>
+                    {% endif %}
+                <a class="delete-link" href="{% url 'room-task-update' id=room.id pk=task.id %}">&#9998;</a>
+                </div>
+            {% empty %}
+                <h3>No items in List</h3>
+            {% endfor %}
+            {% else %}
+                <h3>Want to join to the room?<a href="{% url 'room-enter' room.id %}">Join</a></h3>
+            {% endif %}
         </div>
 {% endblock content %}

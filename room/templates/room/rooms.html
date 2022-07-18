@@ -22,9 +22,9 @@
         <div class="task-items-wrapper">
         {% for room in rooms %}
                 <div class="task-wrapper">
-                    <a class="delete-link" href="{% url 'room-detail' room.id %}">Detail &#128386;</a>
-                    <a id="add-link" href="{% url 'room' room.id %}">   {{ room.name }}   </a>
-                    <a class="delete-link" href="{% url 'room-update' room.id %}">&#9998; Update Room</a>
+                    <a href="{% url 'room-detail' room.id %}">Detail &#128386;</a>
+                    <a class="delete-link" href="{% url 'room' room.id %}">   {{ room.name }}   </a>
+                    <a href="{% url 'room-update' room.id %}">&#9998; Update Room</a>
                 </div>
         {% empty %}
             <h3>No items in List</h3>

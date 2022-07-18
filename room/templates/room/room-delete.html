@@ -1,14 +1,29 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <h4>{{ room }}</h4>
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>{{ room.name }}</h3>
+        <h3><a href="{% url 'room' room.id %}">&#8678; Back</a></h3>
+    </div>
     {% if request.user in room.participants.all %}
-        <a href="{% url 'room' room.id %}">Back</a>
-        <h4>Are you sure you want to Delete this Room?</h4>
-        <form method="POST" action="">
+    <div class="task-wrapper">
+        <h5></h5>
+        <div class="task-title">
+            <h4>Are you sure you want to Delete this Room?</h4>
+        </div>
+        <h5></h5>
+    </div>
+    <div class="task-wrapper">
+        <h5></h5>
+        <div class="task-title">
+            <form method="POST" action="">
             {% csrf_token %}
-            <input type="submit" value="Delete">
-        </form>
+            <input class="button" type="submit" value="Delete">
+            </form>
+        </div>
+        <h5></h5>
+    </div>
     {% else %}
         <h4>You are not allowed here!</h4>
     {% endif %}

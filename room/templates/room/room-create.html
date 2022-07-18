@@ -1,11 +1,15 @@
 {% extends 'main.html' %}
 {% block content %}
-
-    <a href="{% url 'rooms' %}">Back</a>
-    <form method="POST" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit">
-    </form>
-
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>Create new room</h3>
+        <h3><a href="{% url 'rooms' %}">&#8678; Back</a></h3>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="button" type="submit" value="Create new room">
+        </form>
+    </div>
 {% endblock content %}

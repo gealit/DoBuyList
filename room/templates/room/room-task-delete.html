@@ -1,11 +1,27 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    {{ roomtask }}
-    <a href="{% url 'room-task-update' id=roomtask.room_id pk=roomtask.id %}">Back</a>
-    <h4>Are you sure you want to Delete this Task?</h4>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <input type="submit" value="Delete">
-    </form>
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>{{ roomtask.room.name }} | {{ roomtask.title }}</h3>
+        <h3><a href="{% url 'room-task-update' id=roomtask.room_id pk=roomtask.id %}">&#8678; Back</a></h3>
+    </div>
+    <div class="task-wrapper">
+        <h5></h5>
+        <div class="task-title">
+            <h4>Are you sure you want to Delete this Task?</h4>
+        </div>
+        <h5></h5>
+    </div>
+    <div class="task-wrapper">
+        <h5></h5>
+        <div class="task-title">
+            <form method="POST" action="">
+            {% csrf_token %}
+            <input class="button" type="submit" value="Delete">
+            </form>
+        </div>
+        <h5></h5>
+    </div>
+
 {% endblock content %}

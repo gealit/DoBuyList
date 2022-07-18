@@ -1,20 +1,49 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <a href="{% url 'room' room.id %}">Back</a>
-    <h4>chose users you want to add to the {{ room }}</h4>
-    <form method="POST" action="">
-        {% csrf_token %}
-        {% for user in participants %}
-        {{ user.username }}
-        {% endfor %}
-        {% for user in users %}
-        {% if user not in participants %}
-        <div class="container">
-        {{ user.username }}<a href="{% url 'user-add' id=room.id pk=user.pk %}">add</a>
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>{{ room.name }}</h3>
+        <h3><a href="{% url 'room' room.id %}">&#8678; Back</a></h3>
+    </div>
+    <div class="task-wrapper">
+        <h5></h5>
+        <div class="task-title">
+            <h4>Choose users you want to add to the {{ room }}</h4>
         </div>
-        {% endif %}
+        <h5></h5>
+    </div>
+    <div class="task-title">
+        <h3>Participants:</h3>
+        {% for user in participants %}
+        <h3><a class="button" href="{% url 'room-user-delete' id=room.id pk=user.pk %}">{{ user.username }} &#9746; del</a></h3>
         {% endfor %}
+    </div>
+    <div id="search-add-wrapper">
+    <h3></h3>
+        <form method="GET" style="margin-top: 0px;display: flex;">
+            {% csrf_token %}
+            <input class="search__input" type='text' name='search-area' placeholder="Search The User" value="{{search_input}}">
+            <input class="button" type="submit" value='Search'>
+        </form>
+    <h3></h3>
+    </div>
+    {% if users %}
+        {% for user in users %}
+            {% if user not in participants %}
+                <div class="task-wrapper">
+                    <h5></h5>
+                    <a class="button" href="{% url 'user-add' id=room.id pk=user.pk %}">{{ user.username }} &#9745; add</a>
+                    <h5></h5>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="task-wrapper">
+            <h5></h5>
+            <h3>There is not such users</h3>
+            <h5></h5>
+        </div>
+    {% endif %}
 
-    </form>
 {% endblock content %}

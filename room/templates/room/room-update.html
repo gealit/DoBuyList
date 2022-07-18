@@ -1,22 +1,36 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <a href="{% url 'room-detail' room.id %}">Back</a>
-    <form method="POST">
-        {% csrf_token %}
-        {% if form.errors %}
-            <div class="alert alert-primary" role="alert">
-                Error! {{ form.errors }}
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>{{ room.name }}</h3>
+        <h3><a href="{% url 'rooms' %}">&#8678; Back</a></h3>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-primary" role="alert">
+                    Error! {{ form.errors }}
+                </div>
+            {% endif %}
+            <div class="task-wrapper">
+                <div class="task-title">
+                    <h3>Participants:</h3>
+                    {% for account in room.participants.all %}
+                        <h3><a class="button" href="{% url 'room-user-delete' id=room.id pk=account.pk %}">{{ account.username }} &#9746; del;</a></h3>
+                    {% endfor %}
+                </div>
             </div>
-        {% endif %}
-        <div class="container">Participants:
-        {% for account in room.participants.all %}
-        <div class="container">{{ account.username }}<a href="{% url 'room-user-delete' id=room.id pk=account.pk %}">del</a></div>
-        {% endfor %}
-        <a href="{% url 'room-user-add' id=room.id %}">add participants</a>
-        </div>
-        <div class="container">{{ form.as_p }}</div>
-        <input type="submit" value="Submit">
-    </form>
-    <a href="{% url 'room-delete' room.id %}">Delete</a>
+            <div class="task-wrapper">
+                <h5></h5>
+                <div class="task-title">
+                    <a class="button" href="{% url 'room-user-add' id=room.id %}">add participants &#9745;</a>
+                </div>
+                <h5></h5>
+            </div>
+            {{ form.as_p }}
+            <input class="button" type="submit" value="Update">
+        </form>
+    </div>
 {% endblock content %}

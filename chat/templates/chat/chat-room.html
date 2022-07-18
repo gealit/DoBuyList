@@ -1,37 +1,28 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends 'main.html' %}
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-
-        <title>Chat</title>
-    </head>
-    <body>
-        <div class="container">
-            <div class="row d-flex justify-content-center">
-                <div class="col-6">
-                <a href="{% url 'room' id=room.id %}">back to the room</a>
-                    <form>
-                        <div class="form-group">
-                            <label for="exampleFormControlTextarea1" class="h4 pt5">Chatroom {{ room.name }}</label>
-                            <textarea class="form-control" id="chat-text" rows="10">
-                                {% for message in messages %}
-{{ message.user.username }}: {{ message.content }}
-                                {% endfor %}
-                            </textarea><br>
+{% block content %}
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>Chatroom {{ room.name }}</h3>
+        <h3><a href="{% url 'room' id=room.id %}">&#8678; Back</a></h3>
+    </div>
+    <form>
+        <div>
+            <div class="task-item-wrapper" id="chat-text" aria-rowspan="3">
+                    {% for message in messages %}
+                        <div class="task-wrapper">
+                            <h3>{{ message.user.username }}: {{ message.content }}</h3>
+                            <h5>{{ message.date_added|timesince }} ago.</h5>
                         </div>
-                        <div class="form-group">
-                            <input class="form-control" id="input" type="text"></br>
-                        </div>
-                        <input class="btn btn-secondary btn-lg btn-block" id="submit" type="button" value="Send">
-                    </form>
-                </div>
+                    {% endfor %}
+            </div>
+            <div class="task-wrapper">
+                <input class="form-control" id="input" type="text" placeholder="Your message...">
+                <input class="button" id="submit" type="button" value="Send message">
             </div>
         </div>
+    </form>
+
         {{ room.id|json_script:"room-name" }}
         {{ request.user.username|json_script:"user_username" }}
         <script>
@@ -59,9 +50,16 @@
 
             chatSocket.onmessage = function (e) {
                 const data = JSON.parse(e.data);
-                console.log(data)
-                document.querySelector('#chat-text').value += (data.username + ': ' + data.message + '\n')
+                console.log(data);
+
+                if (data.message) {
+                    let html = '<div class="task-wrapper">';
+                        html += '<h3>' + data.username + ': ' + data.message + '</h3>';
+                        html += '<h5>' + 'recently' + '</h5></div>';
+
+                document.querySelector('#chat-text').innerHTML += html;
                 scrollToBottom()
+                }
             }
 
             //
@@ -77,5 +75,4 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
 
-    </body>
-</html>
+{% endblock content %}

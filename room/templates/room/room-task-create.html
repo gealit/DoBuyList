@@ -1,12 +1,18 @@
 {% extends 'main.html' %}
 {% block content %}
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>{{ room.name }}</h3>
+        <h3><a href="{% url 'room' room.id %}">&#8678; Back</a></h3>
+    </div>
     {% if request.user in room.participants.all %}
-    <div class="container"><a href="{% url 'room' room.id %}">Back</a></div>
-    <form method="POST" action="">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit">
-    </form>
+        <div class="card-body">
+            <form method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="button" type="submit" value="Submit">
+            </form>
+        </div>
     {% else %}
         <a href="{% url 'room-enter' room.id %}">{{ room.name }}</a>
     {% endif %}

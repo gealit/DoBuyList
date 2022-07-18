@@ -1,12 +1,24 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <a href="{% url 'room' id=request.resolver_match.kwargs.id %}">Back</a>
-    <div class="container">{{ roomtask.room }} | {{ roomtask }}</div>
-    <a href="{% url 'room-task-delete' id=roomtask.room_id pk=roomtask.id %}">Delete</a>
+    <div class="header-bar">
+        <h3>Hello {{ request.user.username|title }}</h3>
+        <h3>{{ roomtask.room.name }} | {{ roomtask.title }}</h3>
+        <h3><a href="{% url 'room' id=request.resolver_match.kwargs.id %}">&#8678; Back</a></h3>
+    </div>
+
+    <div class="card-body">
+
     <form method="POST" action="">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Submit">
+        <div class="task-title">
+            {{ roomtask.title }}; Created {{ roomtask.created|timesince }} ego.
+        </div>
+        <div class="task-wrapper">
+            <a class="button" href="{% url 'room-task-delete' id=roomtask.room_id pk=roomtask.id %}">Delete task</a>
+            <input class="button" type="submit" value="Update task">
+        </div>
     </form>
+    </div>
 {% endblock content %}
