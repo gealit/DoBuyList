@@ -47,7 +47,7 @@ class RegisterPage(FormView):
                     'token': account_activation_token.make_token(user),
                 })
                 user.email_user(subject=subject, message=message)
-                return HttpResponse('please check your email for account activation')
+                return HttpResponse('<h1>Please check your email for account activation</h1>')
             login(self.request, user)
         return super(RegisterPage, self).form_valid(form)
 
