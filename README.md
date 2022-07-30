@@ -1,15 +1,24 @@
 # DoBuyList
-Currently under development...
+Deployed. http://82.148.18.4/
 
-It will contain:
-The to_do list &amp; purchase list with chat function
+The application contains:
+The to_do list, rooms with chat function.
 
 Options:
 - to see your own lists, 
-- to create rooms and share them with friends and families,
+- to create rooms and share them with friends and families (you are able to create tasks for the room, and discuss it in chat room),
 - to use a chat in privat room.
+- purchase list under develompment.
 
-For the project will be used:
+For the project were used:
+- Python
+- Django
+- Django-Channels
 - DB postgres
-- django
-- django-channels
+
+
+For the deployement were used:
+- gunicorn,
+- daphne,
+- redis,
+- nginx.
